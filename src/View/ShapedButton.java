@@ -1,32 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
-/**
- *
- * @author PIERO
- */
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
-
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicButtonUI;
 
 public class ShapedButton {
 
@@ -71,13 +50,6 @@ public class ShapedButton {
   POLYGON
  }
 
-
-
- /**
-  * Create the GUI and show it. For thread safety,
-  * this method should be invoked from the
-  * event dispatch thread.
-  */
  private static void createAndShowGUI() {
 
   // Create and set up the window.

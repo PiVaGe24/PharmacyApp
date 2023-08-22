@@ -1,21 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import View.TableCustom.TableCustom;
 
-/**
- *
- * @author PIERO
- */
 public class JP_Dashboard extends javax.swing.JPanel {
 
-    /**
-     * Creates new form JP_Dashboard
-     */
     public JP_Dashboard() {
         initComponents();
         progress1.setBackground(new java.awt.Color(66, 246, 84));
@@ -86,7 +74,7 @@ public class JP_Dashboard extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("SALE MONTHLY");
 
-        cmb_progress_month.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio" }));
+        cmb_progress_month.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre" }));
         cmb_progress_month.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
 
         progress1.setForeground(new java.awt.Color(204, 204, 204));

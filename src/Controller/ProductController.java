@@ -26,8 +26,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.NumberFormat;
-import java.util.List;
-import javax.swing.JOptionPane;
+import java.util.List;  
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -43,7 +43,7 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
     NumberFormat formatoNumero = NumberFormat.getInstance();
     NumberFormat formatoDinero = NumberFormat.getCurrencyInstance();
     DefaultTableModel modelTableProduct = new DefaultTableModel();
-
+    private JTextField[] textFields;
     public ProductController(Product objProduct, ProductDao objProductDao, JF_Main jfMain,JP_TableProduct jpTableProduct,JP_ProductRegister jpProductRegister) {
         this.objProduct = objProduct;
         this.objProductDao = objProductDao;
@@ -66,6 +66,13 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
         this.jpProductRegister.txt_product_description.addKeyListener(this);
         this.jpProductRegister.cmb_product_category.addKeyListener(this);
         this.jpTableProduct.cmb_product_category.addItemListener(this);
+        
+        textFields = new JTextField[] {
+            this.jpProductRegister.txt_product_code,
+            this.jpProductRegister.txt_product_name,
+            this.jpProductRegister.txt_product_price,
+            this.jpProductRegister.txt_product_description,
+        };
         
         TableActionEvent evt = new TableActionEvent() {
             @Override
@@ -122,56 +129,44 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String code = jpProductRegister.txt_product_code.getText().trim();
-        String name = jpProductRegister.txt_product_name.getText().trim();
-        String unitPrice = jpProductRegister.txt_product_price.getText().trim();
-        String description =jpProductRegister.txt_product_description.getText().trim();
-        String id = jpProductRegister.txt_product_id.getText().trim();
-        int categoryid = jpProductRegister.cmb_product_category.getItemAt(jpProductRegister.cmb_product_category.getSelectedIndex()).getId();
-        if(e.getSource()==jpProductRegister.btn_product_add){
-            if(code.equals("")||
-                    name.equals("")||
-                    String.valueOf(unitPrice).equals("")||
-                    description.equals("")){
-                Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
-                noti.showNotification();
-            }else{
-                objProduct.setCode(code);
-                objProduct.setName(name);
-                objProduct.setUnit_price(Double.parseDouble(unitPrice));
-                objProduct.setDescription(description);
-                objProduct.setCategory_id(categoryid);
-                if(objProductDao.RegisterProductQuery(objProduct)){
-                    ListAllProduct();
-                    ClearFieldProduct();
-                    Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Register successful");
-                    noti.showNotification();
-                    jpProductRegister.txt_product_code.requestFocus();}
-            }
-        }else if(e.getSource()==jpProductRegister.btn_product_update){
-            if(String.valueOf(code).equals("")||
-                    name.equals("")||
-                    String.valueOf(unitPrice).equals("")||
-                    description.equals("")
-                    || String.valueOf(categoryid).equals("")
-                    ){
-                Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
-                noti.showNotification();
-            }else{
+        if(e.getSource()==jpProductRegister.btn_product_add || e.getSource()==jpProductRegister.btn_product_update){
+            if(validateFields()){
+                String code = jpProductRegister.txt_product_code.getText().trim();
+                String name = jpProductRegister.txt_product_name.getText().trim();
+                String unitPrice = jpProductRegister.txt_product_price.getText().trim();
+                String description =jpProductRegister.txt_product_description.getText().trim();
+                int categoryid = jpProductRegister.cmb_product_category.getItemAt(jpProductRegister.cmb_product_category.getSelectedIndex()).getId();
+                String id = jpProductRegister.txt_product_id.getText().trim();
+                if(jpProductRegister.btn_product_add.isVisible()){
+                    id = "0";
+                }
                 objProduct.setCode(code);
                 objProduct.setName(name);
                 objProduct.setUnit_price(Double.parseDouble(unitPrice));
                 objProduct.setDescription(description);
                 objProduct.setCategory_id(categoryid);
                 objProduct.setId(Integer.parseInt(id));
-                if(objProductDao.UpdateProductQuery(objProduct)){
+                if(jpProductRegister.btn_product_update.isVisible()){
+                    if(objProductDao.UpdateProductQuery(objProduct)){
                     ListAllProduct();
                     Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Data updated successfully");
                     noti.showNotification();
                     jfMain.panelSlideProduct.show(0);
                     jpTableProduct.txt_product_search.requestFocus();}
+                }else{
+                    if(objProductDao.RegisterProductQuery(objProduct)){
+                    ListAllProduct();
+                    ClearFieldProduct();
+                    Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Register successful");
+                    noti.showNotification();
+                    jpProductRegister.txt_product_code.requestFocus();}
+                }
+            }else{
+                Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
+                noti.showNotification();
             }
-        }/*else if(e.getSource()==jpTableProduct.btn_product_register){
+        }
+        /*else if(e.getSource()==jpTableProduct.btn_product_register){
 
         }*/else if(e.getSource()==jpProductRegister.btn_product_cancel){
             jfMain.panelSlideProduct.show(0);
@@ -213,49 +208,34 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
 
     @Override
     public void keyPressed(KeyEvent e) {
-        String code = jpProductRegister.txt_product_code.getText().trim();
-        String name = jpProductRegister.txt_product_name.getText().trim();
-        String price = jpProductRegister.txt_product_price.getText().trim();
-        String description = jpProductRegister.txt_product_description.getText().trim();
-        if(e.getSource()==jpProductRegister.txt_product_code){
-            if (e.getKeyCode() == KeyEvent.VK_ENTER&&!code.equals("")) {
-                jpProductRegister.txt_product_name.requestFocus();
-            }else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                jpProductRegister.txt_product_code.setText(" ");
-            }
-        }else if(e.getSource()==jpProductRegister.txt_product_name){
-            if (e.getKeyCode() == KeyEvent.VK_ENTER&&!name.equals("")) {
-                jpProductRegister.txt_product_price.requestFocus();
-            }
-        }else if(e.getSource()==jpProductRegister.txt_product_price){
-            if (e.getKeyCode() == KeyEvent.VK_ENTER&&!price.equals("")) {
-                jpProductRegister.txt_product_description.requestFocus();
-            }
-        }else if(e.getSource()==jpProductRegister.txt_product_description&&jpProductRegister.btn_product_add.isVisible()){
-            if (e.getKeyCode() == KeyEvent.VK_ENTER&&
-                    !code.equals("")&&
-                    !name.equals("")&&
-                    !price.equals("")&&
-                    !description.equals("")
-                    ) {
-                System.out.println("Registrar Product");
-            }else if(e.getKeyCode() == KeyEvent.VK_ENTER&&!description.equals("")){
-                jpProductRegister.txt_product_code.requestFocus();
-            }
-        }else if(e.getSource()==jpProductRegister.txt_product_description&&jpProductRegister.btn_product_update.isVisible()){
-            if (e.getKeyCode() == KeyEvent.VK_ENTER&&
-                    !code.equals("")&&
-                    !name.equals("")&&
-                    !price.equals("")&&
-                    !description.equals("")
-                    ) {
-                System.out.println("Actualiza Product");
-            }else if(e.getKeyCode() == KeyEvent.VK_ENTER&&!description.equals("")){
-                jpProductRegister.txt_product_code.requestFocus();
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            for (int i = 0; i < textFields.length; i++) {
+                JTextField textField = textFields[i];
+                String fieldValue = textField.getText().trim();
+                if (e.getSource() == textField) {
+                    if (!fieldValue.equals("")) {
+                        if (i < textFields.length - 1) {
+                            textFields[i + 1].requestFocus();
+                        } else if (jpProductRegister.btn_product_add.isVisible()||jpProductRegister.btn_product_update.isVisible()) {
+                            boolean allFieldsFilled = true;
+                            for (JTextField field : textFields) {
+                                if (field.getText().trim().isEmpty()) {
+                                    allFieldsFilled = false;
+                                    break;}
+                            }
+                            if(allFieldsFilled){
+                                if(jpProductRegister.btn_product_add.isVisible()){
+                                    System.out.println("ADD PROD.");//jpCustomerRegister.btn_customer_add.doClick();
+                                }else{
+                                    System.out.println("UPD PROD.");}
+                            }else{
+                                textFields[0].requestFocus();}
+                        }
+                    }
+                    break;
+                }
             }
         }
-        
-        
     }
 
     @Override
@@ -290,7 +270,9 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
         jpProductRegister.txt_product_name.setText("");
         jpProductRegister.txt_product_price.setText("");
         jpProductRegister.txt_product_description.setText("");
-        jpProductRegister.cmb_product_category.setSelectedIndex(0);
+        if(jpProductRegister.cmb_product_category.getSelectedIndex()!=-1){
+            jpProductRegister.cmb_product_category.setSelectedIndex(0);
+        }
         jpProductRegister.btn_product_update.setVisible(false);
         jpProductRegister.btn_product_add.setVisible(true);
     }
@@ -318,4 +300,25 @@ public class ProductController implements ActionListener,MouseListener,KeyListen
         }
     }
     
+    private boolean validateFields(){
+        String code = jpProductRegister.txt_product_code.getText().trim();
+        String name = jpProductRegister.txt_product_name.getText().trim();
+        String unitPrice = jpProductRegister.txt_product_price.getText().trim();
+        String description =jpProductRegister.txt_product_description.getText().trim();
+        int categoryid = getSelectedCategoryId();
+        
+        return !code.isEmpty() && !name.isEmpty() && !unitPrice.isEmpty()
+                && !description.isEmpty() && categoryid!=0;
+    }
+    
+    // Función para obtener el ID del documento seleccionado
+    private int getSelectedCategoryId() {
+        if(jpProductRegister.cmb_product_category.getSelectedIndex()==-1){
+            System.out.println("NECESARIAMENTE DEBES ASIGNARLE 1 CATEGORIA");
+            return 0;
+        }
+        return jpProductRegister.cmb_product_category
+                .getItemAt(jpProductRegister.cmb_product_category.getSelectedIndex())
+                .getId();
+    }
 }

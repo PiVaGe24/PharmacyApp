@@ -47,7 +47,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
         this.jpTableCustomer.btn_customer_register.addMouseListener(this);
         this.jpCustomerRegister.btn_customer_update.addActionListener(this);
         this.jpCustomerRegister.btn_customer_cancel.addActionListener(this);
-        this.jpCustomerRegister.btn_add_customer.addActionListener(this);
+        this.jpCustomerRegister.btn_customer_add.addActionListener(this);
         this.jpTableCustomer.txt_customer_search.addKeyListener(this);
         
         this.jpCustomerRegister.txt_customer_id.addKeyListener(this);
@@ -55,9 +55,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
         this.jpCustomerRegister.txt_customer_email.addKeyListener(this);
         this.jpCustomerRegister.txt_customer_address.addKeyListener(this);
         this.jpCustomerRegister.txt_customer_telephone.addKeyListener(this);
-        
-        
-        
+
         TableActionEvent evt = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
@@ -68,7 +66,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
                 jpCustomerRegister.txt_customer_email.setText(jpTableCustomer.table_customer.getValueAt(row, 4).toString());
  
                 jpCustomerRegister.btn_customer_update.setVisible(true);
-                jpCustomerRegister.btn_add_customer.setVisible(false);
+                jpCustomerRegister.btn_customer_add.setVisible(false);
                 jpCustomerRegister.txt_customer_id.setEditable(false);
                 jfMain.panelSlideCustomer.show(1);
                 jpCustomerRegister.txt_customer_fullname.requestFocus();
@@ -108,61 +106,36 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==jpCustomerRegister.btn_add_customer&&!jpCustomerRegister.txt_customer_id.getText().isEmpty()){
-            int idCustomer = Integer.parseInt(jpCustomerRegister.txt_customer_id.getText().trim());
-            String fullname = jpCustomerRegister.txt_customer_fullname.getText().trim();
-            String address = jpCustomerRegister.txt_customer_address.getText().trim();
-            String telephone =jpCustomerRegister.txt_customer_telephone.getText().trim();
-            String email = jpCustomerRegister.txt_customer_email.getText().trim();
-            if(String.valueOf(idCustomer).equals("")
-                ||fullname.equals("")
-                ||address.equals("")
-                ||telephone.equals("")
-                ||email.equals(""))
-            {
-                Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
-                noti.showNotification();
-            }else{
+        if(e.getSource()==jpCustomerRegister.btn_customer_add || e.getSource()==jpCustomerRegister.btn_customer_update){
+            if(validateFields()){
+                int idCustomer = Integer.parseInt(jpCustomerRegister.txt_customer_id.getText().trim());
+                String fullname = jpCustomerRegister.txt_customer_fullname.getText().trim();
+                String address = jpCustomerRegister.txt_customer_address.getText().trim();
+                String telephone =jpCustomerRegister.txt_customer_telephone.getText().trim();
+                String email = jpCustomerRegister.txt_customer_email.getText().trim();
                 customer.setId(idCustomer);
                 customer.setFull_name(fullname);
                 customer.setAddress(address);
                 customer.setTelephone(telephone);
                 customer.setEmail(email);
-                if(customerDao.RegisterCustomerQuery(customer)){
+                if(jpCustomerRegister.btn_customer_update.isVisible()){
+                    if(customerDao.UpdateCustomerQuery(customer)){
+                    ListAllCustomer();
+                    jfMain.panelSlideCustomer.show(0);
+                    Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Data updated successfully");
+                    noti.showNotification();
+                    jpTableCustomer.txt_customer_search.requestFocus();}
+                }else{
+                    if(customerDao.RegisterCustomerQuery(customer)){
                     ListAllCustomer();
                     ClearFieldsCustomer();
                     Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Register successful");
                     noti.showNotification();
                     jpCustomerRegister.txt_customer_id.requestFocus();}
-            }
-        }else if(e.getSource()==jpCustomerRegister.btn_add_customer&&jpCustomerRegister.txt_customer_id.getText().isEmpty()){
-            Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
-            noti.showNotification();
-        }else if(e.getSource()==jpCustomerRegister.btn_customer_update){
-            int idCustomer = Integer.parseInt(jpCustomerRegister.txt_customer_id.getText().trim());
-            String fullname=jpCustomerRegister.txt_customer_fullname.getText().trim();
-            String address=jpCustomerRegister.txt_customer_address.getText().trim();
-            String telephone=jpCustomerRegister.txt_customer_telephone.getText().trim();
-            String email=jpCustomerRegister.txt_customer_email.getText().trim();
-            if(String.valueOf(idCustomer).equals("")
-                    ||fullname.equals("")
-                    ||address.equals("")
-                    ||telephone.equals("")
-                    ||email.equals("")){
+                }
+            }else{
                 Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "All fields are required");
                 noti.showNotification();
-            }else{
-                customer.setId(idCustomer);
-                customer.setFull_name(fullname);
-                customer.setAddress(address);
-                customer.setTelephone(telephone);
-                customer.setEmail(email);
-                if(customerDao.UpdateCustomerQuery(customer)){
-                    ListAllCustomer();
-                    jfMain.panelSlideCustomer.show(0);
-                    Notification noti = new Notification(jfMain, Notification.Type.SUCCESS, Notification.Location.TOP_RIGHT, "Data updated successfully");
-                    noti.showNotification();
-                jpTableCustomer.txt_customer_search.requestFocus();}
             }
         }/*else if(e.getSource()==jpTableCustomer.btn_customer_register){
             ClearFieldsCustomer();
@@ -244,7 +217,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
             if (e.getKeyCode() == KeyEvent.VK_ENTER&&!address.equals("")) {
                 jpCustomerRegister.txt_customer_telephone.requestFocus();
             }
-        }else if(e.getSource()==jpCustomerRegister.txt_customer_telephone&&jpCustomerRegister.btn_add_customer.isVisible()){
+        }else if(e.getSource()==jpCustomerRegister.txt_customer_telephone&&jpCustomerRegister.btn_customer_add.isVisible()){
             if (e.getKeyCode() == KeyEvent.VK_ENTER&&
                     !id.equals("")&&
                     !fullname.equals("")&&
@@ -286,7 +259,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
         jpCustomerRegister.txt_customer_address.setText("");
         jpCustomerRegister.txt_customer_telephone.setText("");
         jpCustomerRegister.txt_customer_email.setText("");
-        jpCustomerRegister.btn_add_customer.setVisible(true);
+        jpCustomerRegister.btn_customer_add.setVisible(true);
         jpCustomerRegister.btn_customer_update.setVisible(false);
     }
     
@@ -296,7 +269,7 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
             i--;
         }
     }
-    public void FillCustomer(){
+    /*public void FillCustomer(){
         List <Customer> listCustomer = customerDao.fillCustomerSql();
         jpSale.cmb_customer_name.removeAllItems();
         //jpSale.cmb_customer_name.removeAllItems();
@@ -305,5 +278,17 @@ public class CustomerController implements ActionListener,MouseListener,KeyListe
             jpSale.cmb_customer_name.addItem(new Customer(listCustomer.get(i).getId(),listCustomer.get(i).getFull_name()));
             //jpTableProduct.cmb_product_category.addItem(new Category(listCategory.get(i).getId(),listCategory.get(i).getName()));
         }
+    }*/
+    
+    private boolean validateFields(){
+        String idCustomer = jpCustomerRegister.txt_customer_id.getText().trim();
+        String fullname=jpCustomerRegister.txt_customer_fullname.getText().trim();
+        String address=jpCustomerRegister.txt_customer_address.getText().trim();
+        String telephone=jpCustomerRegister.txt_customer_telephone.getText().trim();
+        String email=jpCustomerRegister.txt_customer_email.getText().trim();
+        
+        return !fullname.isEmpty() && !address.isEmpty() && !telephone.isEmpty()
+                && !email.isEmpty() && !idCustomer.isEmpty();
     }
+    
 }

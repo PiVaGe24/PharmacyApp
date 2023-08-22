@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View.SimpleMessage;
 
-/**
- *
- * @author PIERO
- */
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -18,10 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author Raven
- */
+
 public class GlassPanePopup {
 
     protected JLayeredPane getLayerPane() {

@@ -17,14 +17,15 @@ public class Employee {
     private String telephone;
     private String email;
     private String password;
-    private String rol;
+    private int id_rol;
+    private String rol_name;
     private String created;
     private String update;
 
     public Employee() {
     }
 
-    public Employee(int id, String full_name, String username, String address, String telephone, String email, String password, String rol, String created, String update) {
+    public Employee(int id, String full_name, String username, String address, String telephone, String email, String password, int id_rol,String rol_name, String created, String update) {
         this.id = id;
         this.full_name = full_name;
         this.username = username;
@@ -32,9 +33,18 @@ public class Employee {
         this.telephone = telephone;
         this.email = email;
         this.password = password;
-        this.rol = rol;
+        this.id_rol = id_rol;
+        this.rol_name=rol_name;
         this.created = created;
         this.update = update;
+    }
+
+    public String getRol_name() {
+        return rol_name;
+    }
+
+    public void setRol_name(String rol_name) {
+        this.rol_name = rol_name;
     }
 
     public int getId() {
@@ -93,12 +103,12 @@ public class Employee {
         this.password = password;
     }
 
-    public String getRol() {
-        return rol;
+    public int getId_rol() {
+        return id_rol;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setId_rol(int id_rol) {
+        this.id_rol = id_rol;
     }
 
     public String getCreated() {

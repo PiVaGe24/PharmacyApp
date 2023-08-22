@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View.SimpleMessage;
 
-/**
- *
- * @author PIERO
- */
 import java.awt.Component;
 import java.awt.Dimension;
 import net.miginfocom.layout.BoundSize;
@@ -16,10 +7,6 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.layout.UnitValue;
 
-/**
- *
- * @author Raven
- */
 public class DefaultLayoutCallback extends LayoutCallback {
 
     public Component getParent() {

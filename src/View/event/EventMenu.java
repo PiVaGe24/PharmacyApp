@@ -1,6 +1,9 @@
 package View.event;
 
-public interface EventMenu {
+import Model.MenuItem;
 
-    public void selected(int index);
+public interface EventMenu {
+    //Solo pueden haber metodos abstractos y publicos
+    //Obligan a las subclases a sobreescribirse
+    public abstract void selected(MenuItem item);
 }

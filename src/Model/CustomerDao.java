@@ -5,6 +5,7 @@
  */
 package Model;
 
+import View.swing.search.DataSearch;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import Model.Category;
-
 /**
  *
  * @author PIERO
@@ -43,9 +42,10 @@ public class CustomerDao {
             ps.setTimestamp(7, datetime);
             ps.execute();
             return true;
-        } catch (SQLException ex) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: Register customer");
-            Logger.getLogger(CustomerDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(e.toString());
+            //Logger.getLogger(CustomerDao.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }
@@ -53,7 +53,7 @@ public class CustomerDao {
     public List ListCustomerQuery(String value){
         List<Customer> customer_list = new ArrayList();
         String query = "SELECT * FROM customers";
-        String query_search_name = "SELECT * FROM customers WHERE full_name LIKE '%"+value+"%'";
+        String query_search_name = "SELECT * FROM customers WHERE full_name LIKE ?";
         try {
             conn = con.getConnection();
             if(value.equalsIgnoreCase("")){
@@ -61,6 +61,7 @@ public class CustomerDao {
                 rs=ps.executeQuery();
             }else{
                 ps=conn.prepareStatement(query_search_name);
+                ps.setString(1, "%"+value+"%");
                 rs=ps.executeQuery();
             }
             while(rs.next()){
@@ -79,6 +80,37 @@ public class CustomerDao {
         return customer_list;
     }
     
+    public List<DataSearch> ListSearchCustomerQuery(String value){
+        List<DataSearch> list_customer = new ArrayList<>();
+        String query = "SELECT * FROM customers ORDER BY full_name ASC LIMIT 7";
+        String query_search_customer = "SELECT * FROM customers WHERE full_name LIKE ? LIMIT 7";
+        try{
+            conn=con.getConnection();
+            //Compara dos strings para ver si son iguales ignorando las diferencias entre mayúsculas y minúsculas
+            if(value.equalsIgnoreCase("")){
+                ps=conn.prepareStatement(query);
+                rs=ps.executeQuery();
+            }else {
+                ps=conn.prepareStatement(query_search_customer);
+                ps.setString(1,"%"+value+"%");
+                rs=ps.executeQuery();
+            }
+        while(rs.next()){
+            String name = rs.getString("full_name");
+            int id = rs.getInt("id");
+            //boolean story = isStory(name);
+            //if (story) {
+                list_customer.add(0, new DataSearch(id,name,false));
+            //} else {
+            //    list.add(new DataSearch(name, story));
+            //}
+        }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e.toString());
+        }
+        return list_customer;
+    }
+
     public List ListCustomer5Query(String value){
         List<Customer> customer_list = new ArrayList();
         String query = "SELECT * FROM customers LIMIT 5";

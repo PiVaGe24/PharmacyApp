@@ -44,7 +44,7 @@ public class EmployeeDao {
     
     //Metodo Login
     public Employee LoginQuery(String user,String password){
-        String query = "SELECT * FROM employees WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM employees e JOIN roles r ON r.id=e.id_rol WHERE username = ? AND password = ?";
         Employee employee = new Employee();
         try{
             conn = con.getConnection();
@@ -66,8 +66,8 @@ public class EmployeeDao {
                 telephone_user = employee.getTelephone();
                 employee.setEmail(rs.getString("email"));
                 email_user = employee.getEmail();
-                employee.setRol(rs.getString("rol"));
-                rol_user = employee.getRol();
+                employee.setRol_name(rs.getString("rol_name"));
+                rol_user = employee.getRol_name();
             }
         }catch(SQLException e){
             System.err.println(e.getMessage());
@@ -77,13 +77,12 @@ public class EmployeeDao {
     
     //Register Employee
     public boolean RegisterEmployeeQuery(Employee employee){
-        String query = "INSERT INTO employees(id,full_name,username,address,telephone,email,password,rol,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO employees(id,full_name,username,address,telephone,email,password,id_rol,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?)";
         Timestamp datetime = new Timestamp(new Date().getTime());
         try{
             md = MessageDigest.getInstance("SHA-256");
             hash = md.digest(employee.getPassword().getBytes(StandardCharsets.UTF_8));            
             String encodedHash = Base64.getEncoder().encodeToString(hash);
-            
             conn = con.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, employee.getId());
@@ -93,7 +92,7 @@ public class EmployeeDao {
             ps.setString(5,employee.getTelephone());
             ps.setString(6,employee.getEmail());
             ps.setString(7,employee.getPassword());
-            ps.setString(8,employee.getRol());
+            ps.setInt(8,employee.getId_rol());
             ps.setTimestamp(9,datetime);
             ps.setTimestamp(10,datetime);
             ps.execute();
@@ -109,18 +108,18 @@ public class EmployeeDao {
     }
     
     //List employee
-    public List ListEmployeeQuery(String value,String rol){
+    public List ListEmployeeQuery(String value,int rol){
         List<Employee> list_Employee = new ArrayList<>();
-        String query = "SELECT * FROM employees ORDER BY rol ASC";
-        String query_search_employee = "SELECT * FROM employees WHERE id LIKE '%" + value + "%'";
-        String query_search_employee_rol = "SELECT * FROM employees WHERE id LIKE '%" + value + "%' AND rol='"+rol+"'";
+        String query = "SELECT * FROM employees e INNER JOIN roles r ON r.id=e.id_rol ORDER BY id_rol ASC;";
+        String query_search_employee = "SELECT * FROM employees e INNER JOIN roles r ON r.id=e.id_rol WHERE full_name LIKE '%" + value + "%'";
+        String query_search_employee_rol = "SELECT * FROM employees e INNER JOIN roles r ON r.id=e.id_rol WHERE full_name LIKE '%" + value + "%' AND id_rol='"+rol+"'";
         try{
             conn=con.getConnection();
             //Compara dos strings para ver si son iguales ignorando las diferencias entre mayúsculas y minúsculas
-            if(value.equalsIgnoreCase("")&&rol.equals("All")){
+            if(value.equalsIgnoreCase("")&&rol==0){
                 ps=conn.prepareStatement(query);
                 rs=ps.executeQuery();
-            }else if(rol.equalsIgnoreCase("All")){
+            }else if(rol==0){
                 ps=conn.prepareStatement(query_search_employee);
                 rs=ps.executeQuery();
             }else{
@@ -135,7 +134,8 @@ public class EmployeeDao {
             employee.setAddress(rs.getString("address"));
             employee.setTelephone(rs.getString("telephone"));
             employee.setEmail(rs.getString("email"));
-            employee.setRol(rs.getString("rol"));
+            employee.setRol_name(rs.getString("rol_name"));
+            employee.setId_rol(rs.getInt("id_rol"));
             list_Employee.add(employee);
         }
         }catch(SQLException e){
@@ -146,7 +146,7 @@ public class EmployeeDao {
     
     //Update employee
     public boolean UpdateEmployeeQuery(Employee employee){
-        String query = "UPDATE employees SET full_name=?,username=?,address=?,telephone=?,email=?,rol=?,updated=? WHERE id=?";
+        String query = "UPDATE employees SET full_name=?,username=?,address=?,telephone=?,email=?,id_rol=?,updated=? WHERE id=?";
         Timestamp datetime = new Timestamp(new Date().getTime());
         try{
             conn=con.getConnection();
@@ -156,7 +156,7 @@ public class EmployeeDao {
             ps.setString(3, employee.getAddress());
             ps.setString(4, employee.getTelephone());
             ps.setString(5, employee.getEmail());
-            ps.setString(6, employee.getRol());
+            ps.setInt(6, employee.getId_rol());
             ps.setTimestamp(7, datetime);
             ps.setInt(8, employee.getId());
             ps.execute();

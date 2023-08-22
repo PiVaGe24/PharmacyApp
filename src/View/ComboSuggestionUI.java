@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 /**
@@ -37,10 +32,11 @@ import javax.swing.plaf.basic.ComboPopup;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class ComboSuggestionUI extends BasicComboBoxUI {
-
+private boolean isEnabled = true;
     @Override
     public void installUI(JComponent jc) {
         super.installUI(jc);
+        if(isEnabled){
         Border border = new Border();
         JTextField txt = (JTextField) comboBox.getEditor().getEditorComponent();
         txt.addFocusListener(new FocusAdapter() {
@@ -75,6 +71,7 @@ public class ComboSuggestionUI extends BasicComboBoxUI {
         txt.setBorder(new EmptyBorder(0, 4, 0, 4));
         comboBox.setBackground(Color.WHITE);
         comboBox.setBorder(border);
+        }
     }
 
     @Override

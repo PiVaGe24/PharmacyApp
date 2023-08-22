@@ -19,16 +19,12 @@ import static Model.EmployeeDao.email_user;
 import View.JF_Login;
 import View.JF_Main;
 import View.JF_System;
-import View.JP_Menu;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -132,7 +128,7 @@ public class LoginController implements ActionListener,KeyListener{
             String pass = String.valueOf(jfLogin.txt_password.getPassword());
             employee=employeeDao.LoginQuery(user, pass);
             
-            if(String.valueOf(employee.getRol()).equals("Administrador")){
+            if(String.valueOf(employee.getId_rol()).equals("Administrador")){
                 ViewJFSystemUser();
                 
                 employeeCtrl.ListAllEmployee();
@@ -161,7 +157,7 @@ public class LoginController implements ActionListener,KeyListener{
                 System.out.println("WELCOME **"+username_user+"**"+"\n"+"ROL **"+rol_user+"**");
                 LoadProfileUser();
                 
-            }else if(String.valueOf(employee.getRol()).equals("Auxiliar")){
+            }else if(String.valueOf(employee.getId_rol()).equals("Auxiliar")){
                 ViewJFSystemUser();
                 //jfSystem.txt_employee_search.setEnabled(false);
                 //customerCtrl.ListAllCustomer();

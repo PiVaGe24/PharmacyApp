@@ -88,8 +88,6 @@ public class JF_System extends javax.swing.JFrame {
         lbl_employee_name = new javax.swing.JLabel();
         lbl_employee_rol = new javax.swing.JLabel();
         JTPanel = new javax.swing.JTabbedPane();
-        jPanel4 = new javax.swing.JPanel();
-        panelSlideProduct = new View.Slide.PanelSlide();
         jPanel5 = new javax.swing.JPanel();
         tableScrollButton2 = new View.TableCustom.TableScrollButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -126,11 +124,8 @@ public class JF_System extends javax.swing.JFrame {
         btn_sale_delete = new javax.swing.JButton();
         btn_sale_new = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
-        panelSlideCustomer = new View.Slide.PanelSlide();
         jPanel7 = new javax.swing.JPanel();
-        panelSlideEmployee = new View.Slide.PanelSlide();
         jPanel8 = new javax.swing.JPanel();
-        panelSlideSupplier = new View.Slide.PanelSlide();
         jPanel9 = new javax.swing.JPanel();
         jPanelRound1 = new LIB.JPanelRound();
         jLabel32 = new javax.swing.JLabel();
@@ -175,6 +170,7 @@ public class JF_System extends javax.swing.JFrame {
         jPanelRound7 = new LIB.JPanelRound();
         txt_profile_rol = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -391,24 +387,6 @@ public class JF_System extends javax.swing.JFrame {
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 1010, 100));
 
         JTPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel4.setBackground(new java.awt.Color(153, 203, 203));
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        javax.swing.GroupLayout panelSlideProductLayout = new javax.swing.GroupLayout(panelSlideProduct);
-        panelSlideProduct.setLayout(panelSlideProductLayout);
-        panelSlideProductLayout.setHorizontalGroup(
-            panelSlideProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
-        );
-        panelSlideProductLayout.setVerticalGroup(
-            panelSlideProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
-        );
-
-        jPanel4.add(panelSlideProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 560));
-
-        JTPanel.addTab("Products", jPanel4);
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -672,56 +650,14 @@ public class JF_System extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(153, 203, 203));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        javax.swing.GroupLayout panelSlideCustomerLayout = new javax.swing.GroupLayout(panelSlideCustomer);
-        panelSlideCustomer.setLayout(panelSlideCustomerLayout);
-        panelSlideCustomerLayout.setHorizontalGroup(
-            panelSlideCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
-        );
-        panelSlideCustomerLayout.setVerticalGroup(
-            panelSlideCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
-        );
-
-        jPanel6.add(panelSlideCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 560));
-
         JTPanel.addTab("Customers", jPanel6);
 
         jPanel7.setBackground(new java.awt.Color(153, 203, 203));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        javax.swing.GroupLayout panelSlideEmployeeLayout = new javax.swing.GroupLayout(panelSlideEmployee);
-        panelSlideEmployee.setLayout(panelSlideEmployeeLayout);
-        panelSlideEmployeeLayout.setHorizontalGroup(
-            panelSlideEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
-        );
-        panelSlideEmployeeLayout.setVerticalGroup(
-            panelSlideEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(panelSlideEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 560));
-
         JTPanel.addTab("Employees", jPanel7);
 
         jPanel8.setBackground(new java.awt.Color(153, 203, 203));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        javax.swing.GroupLayout panelSlideSupplierLayout = new javax.swing.GroupLayout(panelSlideSupplier);
-        panelSlideSupplier.setLayout(panelSlideSupplierLayout);
-        panelSlideSupplierLayout.setHorizontalGroup(
-            panelSlideSupplierLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
-        );
-        panelSlideSupplierLayout.setVerticalGroup(
-            panelSlideSupplierLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
-        );
-
-        jPanel8.add(panelSlideSupplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 560));
-
         JTPanel.addTab("Suppliers", jPanel8);
 
         jPanelRound1.setBackground(new java.awt.Color(255, 255, 255));
@@ -1169,6 +1105,10 @@ public class JF_System extends javax.swing.JFrame {
 
         JTPanel.addTab("Profile", jPanel11);
 
+        jPanel4.setBackground(new java.awt.Color(153, 203, 203));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        JTPanel.addTab("Products", jPanel4);
+
         getContentPane().add(JTPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 1010, 580));
 
         pack();
@@ -1395,10 +1335,6 @@ public class JF_System extends javax.swing.JFrame {
     public javax.swing.JLabel lbl_sales;
     public javax.swing.JLabel lbl_settings;
     public javax.swing.JLabel lbl_suppliers;
-    public View.Slide.PanelSlide panelSlideCustomer;
-    public View.Slide.PanelSlide panelSlideEmployee;
-    public View.Slide.PanelSlide panelSlideProduct;
-    public View.Slide.PanelSlide panelSlideSupplier;
     private View.TableCustom.TableScrollButton tableScrollButton1;
     private View.TableCustom.TableScrollButton tableScrollButton2;
     public javax.swing.JTable table_all_purchase;

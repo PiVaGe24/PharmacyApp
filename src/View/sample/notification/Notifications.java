@@ -10,15 +10,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
-import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 //import sample.swing.ModernScrollBarUI;
 
-/**
- *
- * @author RAVEN
- */
 public class Notifications extends javax.swing.JPanel {
 
     /**
@@ -51,7 +46,6 @@ public class Notifications extends javax.swing.JPanel {
         panel.add(new Item( "Steve", "answered to your comment", "a day ago"));
         panel.add(new Item( "Sophie", "answered to your comment", "1 day ago"));
         //panel.add(new Item(new ImageIcon(getClass().getResource("/sample/notification/p3.jpg")), "Dara", "answered to your comment", "2 day ago"));
-
     }
 
     @Override

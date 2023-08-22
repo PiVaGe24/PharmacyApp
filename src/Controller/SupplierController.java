@@ -22,7 +22,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -63,8 +62,6 @@ public class SupplierController implements ActionListener,MouseListener,KeyListe
         this.jpSupplierRegister.txt_supplier_telephone.addKeyListener(this);
         this.jpTableSupplier.cmb_supplier_city.addItemListener(this);
         
-                
-
         TableActionEvent evt = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
@@ -117,12 +114,12 @@ public class SupplierController implements ActionListener,MouseListener,KeyListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-            String name = jpSupplierRegister.txt_supplier_name.getText().trim();
-            String address = jpSupplierRegister.txt_supplier_address.getText().trim();
-            String telephone = jpSupplierRegister.txt_supplier_telephone.getText().trim();
-            String email = jpSupplierRegister.txt_supplier_email.getText().trim();
-            String description = jpSupplierRegister.txt_supplier_description.getText().trim();
-            String city = jpSupplierRegister.cmb_supplier_city.getSelectedItem().toString();
+        String name = jpSupplierRegister.txt_supplier_name.getText().trim();
+        String address = jpSupplierRegister.txt_supplier_address.getText().trim();
+        String telephone = jpSupplierRegister.txt_supplier_telephone.getText().trim();
+        String email = jpSupplierRegister.txt_supplier_email.getText().trim();
+        String description = jpSupplierRegister.txt_supplier_description.getText().trim();
+        String city = jpSupplierRegister.cmb_supplier_city.getSelectedItem().toString();
         if(e.getSource()==jpSupplierRegister.btn_add_supplier){
             if(name.equals("")||
                     address.equals("")||

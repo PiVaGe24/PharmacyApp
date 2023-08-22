@@ -19,7 +19,13 @@ import View.Notify.Notification;
 import View.TableCustomButton.TableActionCellEditor;
 import View.TableCustomButton.TableActionCellRender;
 import View.TableCustomButton.TableActionEvent;
+import View.swing.search.DataSearch;
+import View.swing.search.EventClick;
+import View.swing.search.PanelSearch;
+import View.toggle.ToggleButton;
 import View.toggle.ToggleListener;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,8 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.event.TableModelEvent;
@@ -66,6 +75,9 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
     SimpleDateFormat formatoFechaPersonal = new SimpleDateFormat("EEE, d MMMM");//YYYY
     List<Customer> nameCustomer = customerDao.ListCustomerQuery("");
         
+    PanelSearch searchCustomer = new PanelSearch();
+    JPopupMenu menuCustomer = new JPopupMenu();
+    
     public SaleController(SaleDao saleDao, JP_Sale jpSale,JF_Main jfMain, JP_Report jpReport) {
         this.saleDao = saleDao;
         this.jpSale= jpSale;
@@ -79,14 +91,40 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
         this.jpSale.txt_sale_quantity.addKeyListener(this);
         this.jpSale.txt_sale_customer_document.addKeyListener(this);
         this.jpSale.txt_customer_search.addKeyListener(this);
-        this.jpSale.table_customer.addMouseListener(this);
-        ;
         
         this.jpSale.table_sale.getModel().addTableModelListener(this);
         
         this.jpSale.tglbtn_quantity.addEventToggleSelected(this);
         
         //this.jpSale.txt_name_customer.addKeyListener(this);
+        
+        menuCustomer.setBorder(BorderFactory.createLineBorder(new Color(164,164,164)));
+        menuCustomer.add(searchCustomer);
+        menuCustomer.setFocusable(false);
+        
+        searchCustomer.addEventClick(new EventClick() {
+            @Override
+            public void itemClick(DataSearch data) {
+                jpSale.txt_customer_search.setText(data.getText());
+                String id = ""+data.getId();
+                System.out.println("Click Item: "+data.getText()+" "+id);
+                
+                /*jpSale.cmb_vehicle_customer.removeAllItems();
+                jpSale.lbl_id_customer.setText(id);
+                if(!id.isEmpty()){
+                    DefaultComboBoxModel modeloVehiculo = new DefaultComboBoxModel(vehicleDao.ComboVehicleQuery(Integer.parseInt(id)));
+                    jpSale.cmb_vehicle_customer.setModel(modeloVehiculo);
+                }*/
+                menuCustomer.setVisible(false);
+            }
+
+            @Override
+            public void itemRemove(Component com, DataSearch data) {
+            }
+        });
+        
+        
+        
         
         TableActionEvent evt = new TableActionEvent() {
             @Override
@@ -313,14 +351,11 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
                         //ClearFieldSale();
                         jpSale.txt_sale_product_code.requestFocus();
                     }
-                    
-                    
+                      
                 }else{
                     Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "Enter the product code");
                     noti.showNotification();}
-                
-                
-                
+
             }else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                 jpSale.txt_sale_product_code.setText(" ");
             }
@@ -355,22 +390,6 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
             }*/
         }
         
-        /*else if (e.getSource()==jpSale.txt_sale_quantity){
-            if(e.getKeyCode() == KeyEvent.VK_ENTER&&jpSale.txt_sale_quantity.getText().trim().equals("")){
-                Notification noti = new Notification(jfMain, Notification.Type.INFO, Notification.Location.TOP_RIGHT, "Enter an amount");
-                noti.showNotification();
-            }else if(e.getKeyCode() == KeyEvent.VK_ENTER&&id_product.equals("")&&!customer_name.equals("")){
-                jpSale.txt_sale_product_code.requestFocus();
-            }else if (e.getKeyCode() == KeyEvent.VK_ENTER&&customer_name.equals("")&&!id_product.equals("")) {
-                jpSale.txt_sale_customer_document.requestFocus();
-            }else if(e.getKeyCode() == KeyEvent.VK_ENTER&&!customer_name.equals("")&&Double.parseDouble(subtotal)>0){
-                jpSale.btn_sale_add_product.doClick();
-            }
-            else if(e.getKeyCode() == KeyEvent.VK_ENTER&&!jpSale.txt_sale_quantity.getText().trim().equals("")){
-                jpSale.txt_sale_product_code.requestFocus();
-            }  
-        }*/
-        
         else if(e.getSource()==jpSale.txt_sale_customer_document){
             jpSale.txt_sale_customer_name.setText("");
             if (e.getKeyCode() == KeyEvent.VK_ENTER&&!customer_id.equals("")) {
@@ -382,6 +401,35 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
                     Message("Codigo de cliente no registrado");}
             }if(e.getKeyCode() == KeyEvent.VK_ENTER&&!customer_name.equals("")){
                 jpSale.txt_sale_product_code.requestFocus();
+            }
+        }else if(e.getSource()==jpSale.txt_customer_search){
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    searchCustomer.keyUp();
+                    break;
+                case KeyEvent.VK_DOWN:
+                    searchCustomer.keyDown();
+                    break;
+                case KeyEvent.VK_ENTER:
+                    String text=searchCustomer.getSelectedText();
+                    String id=searchCustomer.getSelectedId();
+                    jpSale.txt_customer_search.setText(text);
+                    menuCustomer.setVisible(false);
+                    //jpSale.lbl_id_customer.setText(id);
+                    System.out.println("Click Item: "+text+" "+ id);
+                    //jpSale.cmb_vehicle_customer.removeAllItems();
+                    /*if(!id.isEmpty()){
+                        DefaultComboBoxModel modeloVehiculo = new DefaultComboBoxModel(vehicleDao.ComboVehicleQuery(Integer.parseInt(id)));
+                        jpService.cmb_vehicle_customer.setModel(modeloVehiculo);
+                    } */  
+                    break;
+                case KeyEvent.VK_DELETE:
+                    //jpSale.lbl_id_customer.setText("");
+                    jpSale.txt_customer_search.setText("");
+                default:
+                    //jpService.cmb_vehicle_customer.removeAllItems();
+                    //jpService.lbl_id_customer.setText("");
+                    break;
             }
         }
     }
@@ -397,18 +445,27 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
                 jpSale.txt_sale_subtotal.setText("0");
             }
         }else if(e.getSource()==jpSale.txt_customer_search){
-            ListCustomer();
+            if(e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode()!=KeyEvent.VK_ENTER){
+                searchCustomer.setData(customerDao.ListSearchCustomerQuery(jpSale.txt_customer_search.getText().trim()));
+                if(searchCustomer.getItemSize()>0){
+                    menuCustomer.show(jpSale.txt_customer_search,0,jpSale.txt_customer_search.getHeight());
+                    menuCustomer.setPopupSize(menuCustomer.getWidth(),(searchCustomer.getItemSize()*35)+2);
+                }else{
+                    menuCustomer.setVisible(false);
+                }
+            }   
         }
     }
      
     private void insertSale() {
         int customer_id = Integer.parseInt(jpSale.txt_sale_customer_document.getText());
         double total = Double.parseDouble(jpSale.txt_sale_total_to_pay.getText());
+        
+        System.out.println("TOTTALALLTLALL"+total);
+        
         if (saleDao.registerSaleQuery(customer_id, id_user , total)&&jpSale.table_sale.getRowCount()>0) {
-            Product product = new Product();
-            ProductDao productDao = new ProductDao();
             int sale_id = saleDao.saleId();
-
+            
             // registerPurchaseDetailQuery();
             for (int i = 0; i < jpSale.table_sale.getRowCount(); i++) {
                 int product_id = Integer.parseInt(jpSale.table_sale.getValueAt(i, 0).toString());
@@ -419,7 +476,7 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
                 saleDao.registerSaleDetailQuery(product_id, sale_id, sale_quantity, sale_price, sale_subtotal);
 
                 //Traer la cantidad de productos
-                product = productDao.CallQuantityProductQuery(product_id);
+                Product product = productDao.CallQuantityProductQuery(product_id);
                 //Obtener cantidad actual y restar la cantidad comprada
                 int amount = product.getProduct_quantity() - sale_quantity;
                 //System.out.println("Cantidad Actual:" + product.getProduct_quantity());
@@ -504,19 +561,6 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
         jpSale.txt_sale_stock.setText("");
     }
 
-    private void ListCustomer() {
-        ClearTableCustomer();
-        List <Customer> listCustomer = customerDao.ListCustomerQuery(jpSale.txt_customer_search.getText());
-        ModelTableCustomer = (DefaultTableModel) jpSale.table_customer.getModel();
-        Object[] row = new Object[2];
-        for(int i=0;i<listCustomer.size();i++){
-            row[0]=listCustomer.get(i).getId();
-            row[1]=listCustomer.get(i).getFull_name();
-            ModelTableCustomer.addRow(row);
-        }
-        jpSale.table_customer.setModel(ModelTableCustomer);
-    }
-    
     public void ClearTableCustomer(){
         for(int i=0;i<ModelTableCustomer.getRowCount();i++){
             ModelTableCustomer.removeRow(i);
@@ -530,9 +574,6 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(e.getSource()==jpSale.table_customer){
-            jpSale.txt_id_customer.setText(String.valueOf(ModelTableCustomer.getValueAt(jpSale.table_customer.getSelectedRow(),0)));
-        }
     }
 
     @Override
@@ -551,10 +592,8 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
-        Product product = new Product();
-        //Obtener cantidad actual y restar la cantidad comprada  
         if(jpSale.table_sale.getRowCount()>0&&e.getFirstRow()>=0&&e.getColumn()>=0){
-            product = productDao.CallQuantityProductQuery((int)temp.getValueAt(row, 0));
+            Product product = productDao.CallQuantityProductQuery((int)temp.getValueAt(row, 0));
             int amount = product.getProduct_quantity();
             System.out.println(temp.getValueAt(row, 2));
             if(Integer.parseInt(temp.getValueAt(row, 2).toString())==0){
@@ -571,6 +610,7 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
                 int quatity=Integer.parseInt(temp.getValueAt(row, 2).toString());
                 double price = Double.parseDouble(temp.getValueAt(row, 3).toString());
                 temp.setValueAt(quatity*price, row, 4);
+                CalculateSale();
             }
         }
         
@@ -583,7 +623,7 @@ public class SaleController implements ActionListener, MouseListener, KeyListene
     }
 
     @Override
-    public void onSelected(boolean selected) {
+    public void onSelected(boolean selected,ToggleButton btn) {
         if(selected==true){
             jpSale.txt_sale_quantity.setEditable(selected);
         }else{

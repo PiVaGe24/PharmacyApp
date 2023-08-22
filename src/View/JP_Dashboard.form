@@ -119,7 +119,7 @@
         <Component class="View.ComboBoxSuggestion" name="cmb_progress_month">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="7">
+              <StringArray count="11">
                 <StringItem index="0" value="All"/>
                 <StringItem index="1" value="Enero"/>
                 <StringItem index="2" value="Febrero"/>
@@ -127,6 +127,10 @@
                 <StringItem index="4" value="Abril"/>
                 <StringItem index="5" value="Mayo"/>
                 <StringItem index="6" value="Junio"/>
+                <StringItem index="7" value="Julio"/>
+                <StringItem index="8" value="Agosto"/>
+                <StringItem index="9" value="Setiembre"/>
+                <StringItem index="10" value="Octubre"/>
               </StringArray>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

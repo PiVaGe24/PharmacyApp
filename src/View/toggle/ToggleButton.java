@@ -23,6 +23,19 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class ToggleButton extends JComponent {
 
+    private boolean enabled = true;
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        repaint();  // Repintar el componente para reflejar el estado de habilitación
+    }
+  
     public boolean isSelected() {
         return selected;
     }
@@ -97,6 +110,36 @@ public class ToggleButton extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
+                if (enabled) {
+                    mouseHover = true;
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                mouseHover = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (enabled && SwingUtilities.isLeftMouseButton(e)) {
+                    mousePress = true;
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (enabled && SwingUtilities.isLeftMouseButton(e)) {
+                    if (mousePress && mouseHover) {
+                        setSelected(!isSelected(), true);
+                    }
+                    mousePress = false;
+                }
+            }
+        });
+        /*addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
                 mouseHover = true;
             }
 
@@ -121,7 +164,7 @@ public class ToggleButton extends JComponent {
                     mousePress = false;
                 }
             }
-        });
+        });*/
     }
 
     private void start(boolean selected) {
@@ -138,7 +181,7 @@ public class ToggleButton extends JComponent {
 
     private void runEventSelected() {
         for (ToggleListener event : events) {
-            event.onSelected(selected);
+            event.onSelected(selected,this);
         }
     }
 
